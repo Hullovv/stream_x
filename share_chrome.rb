@@ -1,13 +1,28 @@
-require_relative 'driver'
-require_relative 'virtual_display'
-display = VirtualDisplay.new
-
-Driver.new(display.display).start
-sleep 2
-display.stream
-display.take_screen('./test.png')
-
-puts 'end'
-
-sleep 10
-display.kill
+require_relative 'stream'
+stream = Stream.new
+a = nil
+while true
+  a = gets.chomp
+  begin
+    if a == 'start'
+      puts 'stream start'
+      stream.start
+      next
+    elsif a == 'stop'
+      puts 'stream stop'
+      stream.stop
+      next
+    elsif a == 'false'
+      break
+    elsif a == 'active'
+      puts Stream.active
+      next
+    else
+      puts a
+      next
+    end
+  rescue Interrupt => e
+    break
+  end
+  exit 1
+end
