@@ -17,7 +17,7 @@ class VirtualDisplay
 
   def launch_x(dims = '1920x1080x24')
     puts "Launch X"
-    xvfb_command = "Xvfb :#{display} -screen 0 #{dims} &"
+    xvfb_command = "Xvfb :#{display} -screen 0 #{dims} -ac -nolisten tcp -nolisten unix &"
     puts "Xvfb starting #{xvfb_command}"
     spawn(xvfb_command)
     puts "Xvfb command: #{xvfb_command}"
