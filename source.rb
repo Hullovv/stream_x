@@ -47,7 +47,41 @@ class VirtualDisplay
 end
 
 
-class PulseSource
+class Pulse
+  attr_reader :pulse_id
+
   def initialize
+    @pulse_id = Random.random_number 100...1_000_000
+    launch_pulse
   end
+
+  # def take_screen(path)
+  #   system "import -display :#{display} -window root #{path}"
+  # rescue StandardError => e
+  #   puts e
+  #   nil
+  # end
+
+  def launch_pulse()
+
+    puts "Launch pulse"
+    pulse_command = "pactl load-module module-null-sink sink_name=#{@pulse_id} sink_properties=device.description=#{@pulse_id}"
+    puts "Pulse starting #{pulse_command}"
+    @module_id = `#{pulse_command}`.strip
+    puts "...#{@module_id}..: Module ID"
+    puts "Pulse command: #{pulse_command}"
+  end
+
+  def kill
+    puts "kill pulse: #{@pulse_id}, ID: #{@module_id}"
+    kill_pulse_command = "pactl unload-module #{@module_id}"
+    puts "Kill pulse command: #{kill_pulse_command}"
+    `#{kill_pulse_command}`
+  end
+
+  # def pid_file = "/tmp/.X#{@display}-lock"
+
+  # def check_proc
+  #   puts `ps aux | grep #{pid}`
+  # end
 end

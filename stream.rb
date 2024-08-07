@@ -10,7 +10,8 @@ class Stream
   def initialize
     @uuid = SecureRandom.uuid
     @display = VirtualDisplay.new
-    @chrome = Driver.new(@display.display)
+    @audio = Pulse.new
+    @chrome = Driver.new(@display.display, @audio)
     @@actives[@uuid] = { thread: nil, status: 'offline', stream: self }
     puts "Initialize stream: #{@uuid}"
   end
@@ -18,7 +19,7 @@ class Stream
   def video_save; end
 
   def ffmpeg_command
-    "ffmpeg -y -video_size 1920x1080 -framerate 25 -f x11grab -i :#{@display.display} -loglevel quiet ./video/t4_#{Time.now.to_i}.mp4 &"
+    "ffmpeg -y -video_size 1920x1080 -framerate 25 -f x11grab -i :#{@display.display} -f pulse -i #{@audio.pulse_id}.monitor -loglevel quiet ./video/t4_#{Time.now.to_i}.mp4 &"
   end
 
   def start
@@ -34,9 +35,10 @@ class Stream
   def stop
     return unless @@actives[@uuid][:thread].kill
 
+    stop_ffmpeg
     @chrome.driver.quit
     @display.kill
-    stop_ffmpeg
+    @audio.kill
     @@actives[@uuid][:status] = 'offline'
   end
 
