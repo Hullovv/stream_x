@@ -24,14 +24,30 @@ class VirtualDisplay
   end
 
   def kill
-    puts "kill display: #{@display}, PID: #{@pid}"
-    Process.kill('SIGKILL', @pid)
-    FileUtils.rm lock_file
+    Process.kill("SIGINT", read_pid_file)
   end
 
   def pid_file = "/tmp/.X#{@display}-lock"
 
   def check_proc
-    puts `ps aux | grep #{pid}`
+    File.exist? pid_file
+  end
+
+  def read_pid_file
+    if File.exist? pid_file
+      pid = IO.read(pid_file).strip.to_i
+      if pid == 0
+        puts "Error read pid file"
+        return nil
+      end
+      return pid
+    end
+    return nil
+  end
+end
+
+
+class PulseSource
+  def initialize
   end
 end

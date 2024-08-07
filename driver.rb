@@ -58,9 +58,9 @@ class Driver
 
   def start
     # driver.get 'https://google.com'
-    driver.navigate.to 'https://www.youtube.com/watch?v=Zocjk0nZX_4'
-  rescue StandardError
-    puts 'error navigate'
+    @driver.navigate.to 'https://www.youtube.com/watch?v=Zocjk0nZX_4'
+  rescue StandardError => e
+    puts "Error navigate: #{e}"
     nil
   end
 end

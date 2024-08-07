@@ -18,7 +18,7 @@ class Stream
   def video_save; end
 
   def ffmpeg_command
-    "ffmpeg -y -video_size 1920x1080 -framerate 25 -f x11grab -i :#{@display.display} -loglevel quiet ./t4_#{Time.now.to_i}.mp4 &"
+    "ffmpeg -y -video_size 1920x1080 -framerate 25 -f x11grab -i :#{@display.display} -loglevel quiet ./video/t4_#{Time.now.to_i}.mp4 &"
   end
 
   def start
@@ -50,14 +50,14 @@ class Stream
 
   def stream
     puts ffmpeg_command
-    @ffmpeg_pid = `#{ffmpeg_command}`
+    @ffmpeg_pid = spawn(ffmpeg_command)
     puts "ffmpeg pid #{@ffmpeg_pid}"
     Process.detach(@ffmpeg_pid)
   end
 
   def stop_ffmpeg
     puts "ffmpeg pid #{@ffmpeg_pid} kill"
-    Process.kill('SIGINT', @ffmpeg_pid)
+    # Process.kill('SIGINT', @ffmpeg_pid)
   end
 
   def self.active
