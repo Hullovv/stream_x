@@ -3,14 +3,15 @@ require 'selenium-webdriver'
 class Driver
   attr_reader :driver, :options, :client
 
-  def initialize(display)
-    @driver = Selenium::WebDriver::Driver.for :chrome, options: set_options(display), http_client: set_client # , desired_capabilities: caps
+  def initialize(display, audio)
+    @driver = Selenium::WebDriver::Driver.for :chrome, options: set_options(display, audio), http_client: set_client # , desired_capabilities: caps
   end
 
-  def set_options(display)
+  def set_options(display, audio)
     options = Selenium::WebDriver::Chrome::Options.new
     # set xvfb display
     options.add_argument("--display=:#{display}")
+    options.add_argument("--alsa-output-device=#{audio.pulse_id}.monitor")
     # default
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-background-networking=true')
@@ -52,13 +53,13 @@ class Driver
 
   def set_client
     client = Selenium::WebDriver::Remote::Http::Default.new
-    client.read_timeout = 5 # seconds
+    client.read_timeout = 120 # seconds
     client
   end
 
   def start
     # driver.get 'https://google.com'
-    @driver.navigate.to 'https://www.youtube.com/watch?v=Zocjk0nZX_4'
+    @driver.navigate.to 'https://ya.ru/video/preview/287310971696413437' #'https://www.youtube.com/watch?v=Zocjk0nZX_4'
   rescue StandardError => e
     puts "Error navigate: #{e}"
     nil

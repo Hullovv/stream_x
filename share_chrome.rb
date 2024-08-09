@@ -1,6 +1,7 @@
 require_relative 'stream'
 stream = Stream.new
 a = nil
+puts 'Enter command'
 while true
   a = gets.chomp
   begin
@@ -22,6 +23,7 @@ while true
       next
     end
   rescue Interrupt => e
+    stream.stop
     break
   end
   exit 1
