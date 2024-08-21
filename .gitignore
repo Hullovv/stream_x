@@ -1,2 +1,4 @@
 ./video/**/*.mp4
 ./screenshots/**/*.png
+**.idea**
+**/build
