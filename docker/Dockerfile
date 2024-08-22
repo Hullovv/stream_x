@@ -13,9 +13,8 @@ RUN apt update -y && \
     libgoogle-perftools-dev
 
 
-COPY ../ /app
+COPY ./ /app
 RUN ln -s docker/build/ffmpeg /usr/bin/ffmpeg
-RUN chmod +x docker/entrypoint.sh
 
 RUN useradd -ms /bin/bash streamer
 ENTRYPOINT ["./docker/entrypoint.sh"]
