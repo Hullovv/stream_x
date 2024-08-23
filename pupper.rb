@@ -8,9 +8,10 @@ class Pupper
     @driver = Puppeteer.launch(
        headless: false,
        args: set_options(display, audio),
-       ignore_default_args: ['enable-automation'],
+       ignore_default_args: ['--enable-automation'],
        env: {'PULSE_SINK' => audio.pulse_id.to_s}
      )
+    p @driver.process.spawnargs
   end
 
   def set_options(display, audio)
@@ -20,13 +21,13 @@ class Pupper
     # options.append("--alsa-output-device=#{audio.pulse_id}.monitor")
     # default
     options.append('--disable-infobars')
-    options.append('--disable-background-networking=true')
+    options.append('--disable-background-networking')
     options.append('--enable-features=NetworkService,NetworkServiceInProcess')
-    options.append('--disable-background-timer-throttling=true')
-    options.append('--disable-backgrounding-occluded-windows=true')
-    options.append('--disable-breakpad=true')
+    options.append('--disable-background-timer-throttling')
+    options.append('--disable-backgrounding-occluded-windows')
+    options.append('--disable-breakpad')
     options.append('--disable-client-side-phishing-detection=true')
-    options.append('--disable-default-apps=true')
+    options.append('--disable-default-apps')
     options.append('--disable-dev-shm-usage')
     options.append('--disable-extensions')
     options.append('--disable-features=AudioServiceOutOfProcess,site-per-process,TranslateUI,BlinkGenPropertyTrees')
@@ -46,9 +47,13 @@ class Pupper
     options.append('--window-size=1920,1080')
     options.append('--window-position=0,0')
     options.append('--disable-translate')
+    options.append('--no-default-browser-check')
+
     # исключаем для скрытия строки "Браузером Chrome управляет автоматизированное тестовое ПО"
     options.append('--disable-blink-features=AutomationControlled')
-    options.append('--enable-features=NetworkService,NetworkServiceInProcess')
+    # options.append("--enable-automation=false")
+    options.append("--excludeSwitches=enable-automation")
+    # options.append("excludeSwitches=enable-automation")
 
     ##
     options.append('--autoplay-policy=no-user-gesture-required')
