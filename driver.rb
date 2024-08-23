@@ -4,6 +4,7 @@ class Driver
   attr_reader :driver, :options, :client
 
   def initialize(display, audio)
+    Thread.current["PULSE_SINK"] = audio.pulse_id.to_s
     @driver = Selenium::WebDriver::Driver.for :chrome, options: set_options(display, audio), http_client: set_client # , desired_capabilities: caps
   end
 
@@ -11,7 +12,8 @@ class Driver
     options = Selenium::WebDriver::Chrome::Options.new
     # set xvfb display
     options.add_argument("--display=:#{display}")
-    options.add_argument("--alsa-output-device=#{audio.pulse_id}.monitor")
+    # options.add_argument("--alsa-output-device=#{audio.pulse_id}.monitor")
+    options.add_argument("PULSE_SINK=#{audio.pulse_id}")
     # default
     options.add_argument('--disable-infobars')
     options.add_argument('--disable-background-networking=true')
@@ -59,7 +61,7 @@ class Driver
 
   def start
     # driver.get 'https://google.com'
-    @driver.navigate.to 'https://ya.ru/video/preview/287310971696413437' #'https://www.youtube.com/watch?v=Zocjk0nZX_4'
+    @driver.navigate.to 'https://rutube.ru/video/2c7230d6ac4767e7cc0b7aeea0907143/' # 'https://ya.ru/video/preview/287310971696413437' #'https://www.youtube.com/watch?v=Zocjk0nZX_4'
   rescue StandardError => e
     puts "Error navigate: #{e}"
     nil
