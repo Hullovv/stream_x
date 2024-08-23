@@ -1,5 +1,6 @@
 require 'securerandom'
 require_relative 'driver'
+require_relative 'pupper'
 require_relative 'source'
 
 class Stream
@@ -11,7 +12,7 @@ class Stream
     @uuid = SecureRandom.uuid
     @display = VirtualDisplay.new
     @audio = Pulse.new
-    @chrome = Driver.new(@display.display, @audio)
+    @chrome = Pupper.new(@display.display, @audio)
     @@actives[@uuid] = { thread: nil, status: 'offline', stream: self }
     puts "Initialize stream: #{@uuid}"
   end
@@ -36,7 +37,7 @@ class Stream
     return unless @@actives[@uuid][:thread].kill
 
     stop_ffmpeg
-    @chrome.driver.quit
+    @chrome.driver.close
     @display.kill
     @audio.kill
     @@actives[@uuid][:status] = 'offline'

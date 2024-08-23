@@ -3,8 +3,8 @@ DISPLAY = 100
 class VirtualDisplay
   attr_reader :display, :pid, :path
 
-  def initialize
-    @display = Random.random_number 100...1_000_000
+  def initialize(display_id, resolution: )
+    @display = display_id
     launch_x
   end
 
@@ -49,17 +49,10 @@ end
 class Pulse
   attr_reader :pulse_id
 
-  def initialize
-    @pulse_id = Random.random_number 100...1_000_000
+  def initialize(xid)
+    @pulse_id = xid
     launch_pulse
   end
-
-  # def take_screen(path)
-  #   system "import -display :#{display} -window root #{path}"
-  # rescue StandardError => e
-  #   puts e
-  #   nil
-  # end
 
   def launch_pulse
     puts 'Launch pulse'
@@ -76,10 +69,4 @@ class Pulse
     puts "Kill pulse command: #{kill_pulse_command}"
     `#{kill_pulse_command}`
   end
-
-  # def pid_file = "/tmp/.X#{@display}-lock"
-
-  # def check_proc
-  #   puts `ps aux | grep #{pid}`
-  # end
 end
