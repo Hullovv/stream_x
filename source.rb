@@ -3,8 +3,8 @@ DISPLAY = 100
 class VirtualDisplay
   attr_reader :display, :pid, :path
 
-  def initialize
-    @display = Random.random_number 100...1_000_000
+  def initialize(display_id)
+    @display = display_id
     launch_x
   end
 
@@ -49,8 +49,8 @@ end
 class Pulse
   attr_reader :pulse_id
 
-  def initialize
-    @pulse_id = Random.random_number 100...1_000_000
+  def initialize(xid)
+    @pulse_id = xid
     launch_pulse
   end
 
