@@ -1,7 +1,8 @@
 class FFmpeg
-  def initialize(xid, display_id)
+  def initialize(xid, display_id, resolution: [1280, 720])
     @xid = xid
     @display_id = display_id
+    @resolution = resolution.join('x')
     start
   end
 
@@ -20,7 +21,7 @@ class FFmpeg
   end
 
   def command
-    "ffmpeg -y -video_size 1920x1080 -framerate 25 -f x11grab -i :#{@display_id} -f pulse -i #{@xid}.monitor -loglevel quiet ./video/#{@xid}.mp4"
+    "ffmpeg -y -video_size #{@resolution} -framerate 25 -f x11grab -i :#{@display_id} -f pulse -i #{@xid}.monitor -b:v 1000k -c:a aac -b:a 192k -loglevel quiet ./video/#{@xid}.mp4"
   end
 
 end

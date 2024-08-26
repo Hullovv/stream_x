@@ -3,7 +3,7 @@ DISPLAY = 100
 class VirtualDisplay
   attr_reader :display, :pid, :path
 
-  def initialize(display_id)
+  def initialize(display_id, resolution: )
     @display = display_id
     launch_x
   end
@@ -54,13 +54,6 @@ class Pulse
     launch_pulse
   end
 
-  # def take_screen(path)
-  #   system "import -display :#{display} -window root #{path}"
-  # rescue StandardError => e
-  #   puts e
-  #   nil
-  # end
-
   def launch_pulse
     puts 'Launch pulse'
     pulse_command = "pactl load-module module-null-sink sink_name=#{@pulse_id} sink_properties=device.description=#{@pulse_id}"
@@ -76,10 +69,4 @@ class Pulse
     puts "Kill pulse command: #{kill_pulse_command}"
     `#{kill_pulse_command}`
   end
-
-  # def pid_file = "/tmp/.X#{@display}-lock"
-
-  # def check_proc
-  #   puts `ps aux | grep #{pid}`
-  # end
 end

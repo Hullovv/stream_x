@@ -12,17 +12,17 @@ class Browser
     set_default_options
   end
 
-  def launch
+  def launch(url: nil, resolution: [1280, 720])
     @link = Puppeteer.launch(
       headless: false,
       args: @options,
       ignore_default_args: @skip_options,
-      env: @envs
+      env: @envs,
+      default_viewport: Puppeteer::Viewport.new(width: resolution.first, height: resolution.last)
     )
-    page = new_page
 
-    page.viewport = Puppeteer::Viewport.new(width: 1920, height: 1080)
-    page.goto 'https://rutube.ru/video/2c7230d6ac4767e7cc0b7aeea0907143/'
+    page = pages&.first || new_page
+    page.goto url
   end
 
   def option(name, value=true)
@@ -90,23 +90,21 @@ class Browser
     option('safebrowsing-disable-auto-update')
     option('password-store', 'basic')
     option('use-mock-keychain')
+    # option('disable-gpu')
+    # option('no-first-run')
+
     # custom flags
     option('kiosk') # remove head
     option('window-size', '1920,1080')
     option('window-position', '0,0')
     option('disable-translate')
-    option('no-default-browser-check')
 
     # исключаем для скрытия строки "Браузером Chrome управляет автоматизированное тестовое ПО"
     option('enable-automation', false)
-    option('disable-blink-features', 'AutomationControlled')
-    # options.append("--enable-automation=false")
-    option("excludeSwitches', 'enable-automation")
-    # options.append("excludeSwitches=enable-automation")
 
     ##
     option('autoplay-policy', 'no-user-gesture-required')
-    option('no-sandbox')
+    # option('no-sandbox')
     option('user-agent', 'Stream_X')
   end
 end
