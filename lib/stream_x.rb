@@ -13,13 +13,13 @@ class StreamX
 
   def create_stream(url: nil, resolution: [1280, 720])
     @xid = "XID_#{SecureRandom.uuid}"
-    @display_id = 10 + Random.rand(2147483637)
+    @display_id = Random.rand(10..2_147_483_646)
 
     @display = VirtualDisplay.new(@display_id, resolution:)
     @alsa = PulseAudio.new(@xid)
 
     @browser = setup_browser(url:, resolution:)
-    @ffmpeg = FFmpeg.new(@xid, @display_id, resolution:)
+    @ffmpeg = FFmpeg[:m3u8].new(@xid, @display_id, resolution:)
 
     StreamX.add_stream(self)
     self
