@@ -1,10 +1,11 @@
 require 'redis'
 require 'json'
 require 'securerandom'
+require_relative 'lib/stream_x'
 
 def process_request(path, _params)
   case path
-  when '/api/get_active_streams' then 123
+  when '/api/get_active_streams' then StreamX.streams_list
   else 0
   end
 end
@@ -15,9 +16,9 @@ def wait_message(redis)
   JSON.parse(message)
 end
 
-def start_server(redis_opts)
+def start_server
   Thread.new do
-    redis = Redis.new(redis_opts)
+    redis = Redis.new({ host: 'localhost', port: 6379, db: 0 })
     loop do
       message = wait_message(redis)
       puts "Received message: #{message}"

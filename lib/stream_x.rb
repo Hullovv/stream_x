@@ -45,4 +45,6 @@ class StreamX
   def self.add_stream(stream_x)
     @streams[stream_x.xid] = stream_x
   end
+
+  def self.streams_list = @streams
 end
