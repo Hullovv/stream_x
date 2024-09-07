@@ -3,9 +3,11 @@ require 'json'
 require 'securerandom'
 require_relative 'lib/stream_x'
 
-def process_request(path, _params)
+def process_request(path, params)
   case path
-  when '/api/get_active_streams' then StreamX.streams_list
+  when '/api/get_active_streams' then StreamX.streams_list.keys
+  when '/api/start_stream' then StreamX.create_stream(url: params[:url]).xid
+  when '/api/stop_stream' then StreamX.streams_list[params[:xid]]&.stop_stream
   else 0
   end
 end
@@ -13,7 +15,7 @@ end
 def wait_message(redis)
   puts 'Wait Message'
   _, message = redis.brpop('requests')
-  JSON.parse(message)
+  JSON.parse(message, symbolize_names: true)
 end
 
 def start_server
@@ -21,12 +23,11 @@ def start_server
     redis = Redis.new({ host: 'localhost', port: 6379, db: 0 })
     loop do
       message = wait_message(redis)
-      puts "Received message: #{message}"
+      Logger.info("Message receive: #{message}", source: :stream_x_server)
 
-      request = message
-      response = process_request(request['path'], request['params'])  # Здесь должна быть ваша логика обработки
-      redis.set(request['response_key'], JSON.generate(response))
-      # Обработка сообщения здесь
+      response = process_request(message[:path], message[:params])
+      Logger.info("Send response: #{response} to #{message[:response_key]}", source: :stream_x_server)
+      redis.set(message[:response_key], JSON.generate(response))
     end
   end
 end

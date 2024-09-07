@@ -4,7 +4,7 @@ REDIS = Redis.new({ host: 'localhost', port: 6379, db: 0 })
 def fetch_response(request_id)
   p "Wait Response From #{request_id}"
   response_key = "response:#{request_id}"
-  times = 5
+  times = 10
   loop do
     p "Wait Response [#{request_id}] Attempts: #{times}"
     return if times < 0
@@ -30,7 +30,20 @@ def send_message(path, params)
   request_id
 end
 
-def get_active_streams
-  request_id = send_message('/api/get_active_streams', {})
+def use_api(path, params)
+  request_id = send_message(path, params)
   fetch_response(request_id)
+end
+
+def get_active_streams
+  use_api('/api/get_active_streams', {})
+end
+
+# @return xid : string
+def start_stream(url)
+  use_api('/api/start_stream', {url:})
+end
+
+def stop_stream(xid)
+  use_api('/api/stop_stream', {xid:})
 end
