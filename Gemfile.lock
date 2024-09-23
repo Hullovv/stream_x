@@ -4,6 +4,7 @@ GEM
     base64 (0.2.0)
     diff-lcs (1.5.1)
     logger (1.6.0)
+    memory_profiler (1.0.2)
     rexml (3.3.4)
       strscan
     rspec (3.13.0)
@@ -33,6 +34,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  memory_profiler
   rspec
   selenium-webdriver
 

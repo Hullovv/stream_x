@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  stream:
+    container_name: stream
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/app
