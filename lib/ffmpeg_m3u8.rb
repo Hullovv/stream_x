@@ -22,6 +22,8 @@ class FFmpegM3U8
 
   def command
     # out: "ffmpeg -i #{m3u8} -c:v libx264 -b:v 1000k -c:a aac -b:a 192k -f flv #{rtmp}"
-    "ffmpeg -loglevel error -y -video_size #{@resolution} -framerate 25 -f x11grab -i :#{@display_id} -f pulse -i #{@xid}.monitor -c:v libx264 -b:v 1000k -c:a aac -b:a 192k -f hls -hls_time 4 -hls_list_size 0 -hls_flags delete_segments ./video/#{@xid}.m3u8"
+    # "ffmpeg -loglevel error -y -video_size #{@resolution} -framerate 25 -f x11grab -i :#{@display_id} -f pulse -i #{@xid}.monitor -c:v libx264 -b:v 1000k -c:a aac -b:a 192k -f hls -hls_time 4 -hls_list_size 0 -hls_flags delete_segments ./video/#{@xid}.m3u8"
+    FileUtils.mkdir_p "./video/#{@xid}/"
+    "ffmpeg -loglevel error -y -video_size #{@resolution} -framerate 25 -f x11grab -i :#{@display_id} -f pulse -i #{@xid}.monitor -c:v libx264  -c:a aac  -f ssegment -segment_time 4 -segment_list ./video/#{@xid}.m3u8 -segment_list_entry_prefix #{@xid}/ ./video/#{@xid}/s-\%05d.ts"
   end
 end
